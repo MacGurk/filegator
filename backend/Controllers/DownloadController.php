@@ -68,9 +68,23 @@ class DownloadController
         $contentDisposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $file['filename'], 'file');
         $contentType = 'application/octet-stream';
 
-        if (pathinfo($file['filename'], PATHINFO_EXTENSION) == 'pdf') {
+        $fileExtension = pathinfo($file['filename'], PATHINFO_EXTENSION);
+
+        if ($fileExtension == 'pdf') {
             $contentDisposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file['filename'], 'file');
-            $contentType = 'application/pdf';
+            $contentType = mime_content_type($fileName);
+        } else if ($fileExtension == 'jpg' or $fileExtension == 'jpeg') {
+            $contentDisposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $file['filename'], 'file');
+            $contentType = 'image/jpeg';
+        } else if ($fileExtension == 'png') {
+            $contentDisposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file['filename'], 'file');
+            $contentType = 'image/png';
+        } else if ($fileExtension == 'gif') {
+            $contentDisposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file['filename'], 'file');
+            $contentType = 'image/gif';
+        } else if ($fileExtension == 'bmp') {
+            $contentDisposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file['filename'], 'file');
+            $contentType = 'image/bmp';
         }
 
         $streamedResponse->headers->set(
